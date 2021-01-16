@@ -48,6 +48,7 @@ namespace StockAnalysisWithSharesiesApp.Data
 
             return _allStocks
                 .OrderByDescending(s => s.PositiveIndicators())
+                .ThenByDescending(s => s.GrowthLastyear())
                 .Take(NumberOfResults);
         }
 

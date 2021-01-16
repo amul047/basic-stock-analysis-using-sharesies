@@ -20,17 +20,19 @@ else
             <tr>
                 <th>Stock</th>
                 <th>Positive indicators</th>
+                <th>Growth last year</th>
                 <th>Market Price</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var stock in postiveStocks)
             {
-                <tr>
-                    <td>@stock.name (@stock.symbol)</td>
-                    <td>@stock.PositiveIndicators()</td>
-                    <td>@stock.marketPrice</td>
-                </tr>
+            <tr>
+                <td>@stock.name (@stock.symbol)</td>
+                <td>@stock.PositiveIndicators()</td>
+                <td>@stock.GrowthLastyear()</td>
+                <td>@stock.marketPrice</td>
+            </tr>
             }
         </tbody>
     </table>
