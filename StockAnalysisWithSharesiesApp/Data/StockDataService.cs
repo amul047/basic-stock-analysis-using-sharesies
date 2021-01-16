@@ -43,7 +43,7 @@ namespace StockAnalysisWithSharesiesApp.Data
 
         public ComparisonPrices comparisonPrices { get; set; }
 
-        public decimal peRatio { get; set; }
+        public decimal? peRatio { get; set; }
 
         public decimal marketPrice { get; set; }
 
@@ -96,7 +96,7 @@ namespace StockAnalysisWithSharesiesApp.Data
                 positiveIndicators++;
             }
 
-            if (peRatio < 0)
+            if (peRatio == null || peRatio < 0)
             {
                 positiveIndicators++;
             }
