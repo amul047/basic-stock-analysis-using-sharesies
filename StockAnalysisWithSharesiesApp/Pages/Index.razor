@@ -1,0 +1,110 @@
+﻿@page "/"
+
+@using StockAnalysisWithSharesiesApp.Data
+@inject IAnalysisService AnalysisService
+
+<h1>Basic Stock Analysis</h1>
+<p>Stocks analysed:</p>
+<p>@AnalysisService.GetAllSymbolsAnalysed()</p>
+
+<h2>Stocks with most positive indicators</h2>
+
+@if (postiveStocks == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Stock</th>
+                <th>Positive indicators</th>
+                <th>Market Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var stock in postiveStocks)
+            {
+                <tr>
+                    <td>@stock.name (@stock.symbol)</td>
+                    <td>@stock.PositiveIndicators()</td>
+                    <td>@stock.marketPrice</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<h2>Fastest growing stocks last year</h2>
+
+@if (growthStocks == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Stock</th>
+                <th>Growth last year</th>
+                <th>Market Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var stock in growthStocks)
+            {
+                <tr>
+                    <td>@stock.name (@stock.symbol)</td>
+                    <td>@stock.GrowthLastyear()</td>
+                    <td>@stock.marketPrice</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+
+<h2>Bargains this week</h2>
+
+@if (bargainStocks == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Stock</th>
+                <th>Growth last week</th>
+                <th>Market Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var stock in bargainStocks)
+            {
+                <tr>
+                    <td>@stock.name (@stock.symbol)</td>
+                    <td>@stock.GrowthLastWeek()</td>
+                    <td>@stock.marketPrice</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private IEnumerable<Stock> postiveStocks;
+    private IEnumerable<Stock> bargainStocks;
+    private IEnumerable<Stock> growthStocks;
+
+    protected override void OnInitialized()
+    {
+        postiveStocks = AnalysisService.GetStocksWithMostPositiveIndicators();
+        bargainStocks = AnalysisService.GetStocksOnBargainThisWeek();
+        growthStocks = AnalysisService.GetFastestGrowingStocks();
+    }
+}
