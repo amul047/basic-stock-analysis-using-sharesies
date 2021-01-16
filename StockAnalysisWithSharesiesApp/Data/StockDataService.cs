@@ -1,37 +1,38 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 
 namespace StockAnalysisWithSharesiesApp.Data
 {
     public interface IStockService
     {
-        Stock GetStock(string symbol);
         Stock GetStock(string symbol, string token);
+        IEnumerable<Stock> GetStocks(IEnumerable<string> stockIds, string token);
     }
 
     public class StockService : IStockService
     {
-        private readonly ILoginService _loginService;
-
-        public StockService(ILoginService loginService)
-        {
-            _loginService = loginService;
-        }
-
-        public Stock GetStock(string symbol)
-        {
-            var restClient = new RestSharp.RestClient("https://data.sharesies.nz/");
-            RestSharp.RestRequest request = new RestSharp.RestRequest($"api/v1/instruments/urlslug/{symbol}", RestSharp.Method.GET);
-            request.AddHeader("authorization", $"Bearer {_loginService.Login()}");
-            return JsonConvert.DeserializeObject<Stock>(restClient.Execute(request).Content);
-        }
-
         public Stock GetStock(string symbol, string token)
         {
             var restClient = new RestSharp.RestClient("https://data.sharesies.nz/");
             RestSharp.RestRequest request = new RestSharp.RestRequest($"api/v1/instruments/urlslug/{symbol}", RestSharp.Method.GET);
             request.AddHeader("authorization", $"Bearer {token}");
             return JsonConvert.DeserializeObject<Stock>(restClient.Execute(request).Content);
+        }
+
+        public IEnumerable<Stock> GetStocks(IEnumerable<string> stockIds, string token)
+        {
+            var restClient = new RestSharp.RestClient("https://data.sharesies.nz/");
+            RestSharp.RestRequest request = new RestSharp.RestRequest($"api/v1/instruments", RestSharp.Method.POST);
+            request.AddHeader("authorization", $"Bearer {token}");
+            request.AddJsonBody(new StockSearchRequest
+            {
+                instruments = stockIds
+            });
+
+            var response = restClient.Execute(request);
+
+            return JsonConvert.DeserializeObject<StockSearchResponse>(response.Content).instruments;
         }
     }
 
@@ -132,5 +133,17 @@ namespace StockAnalysisWithSharesiesApp.Data
     public class PriceChange
     {
         public decimal percent { get; set; }
+    }
+
+    public class StockSearchRequest
+    {
+        public IEnumerable<string> instruments { get; set; }
+
+        public string query { get; set; } = string.Empty;
+    }
+
+    public class StockSearchResponse
+    {
+        public IEnumerable<Stock> instruments { get; set; }
     }
 }

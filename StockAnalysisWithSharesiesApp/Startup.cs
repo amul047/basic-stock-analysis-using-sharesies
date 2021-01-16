@@ -26,7 +26,6 @@ namespace StockAnalysisWithSharesiesApp
             services.AddScoped<IStockService, StockService>();
             services.AddScoped<IAnalysisService, AnalysisService>();
             services.Configure<LoginOptions>(Configuration.GetSection(nameof(LoginOptions)));
-            services.Configure<AnalysisOptions>(Configuration.GetSection(nameof(AnalysisOptions)));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

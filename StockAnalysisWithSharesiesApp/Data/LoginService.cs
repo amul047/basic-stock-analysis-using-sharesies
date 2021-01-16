@@ -1,10 +1,12 @@
 ﻿using Microsoft.Extensions.Options;
+using System.Collections.Generic;
+using System.Threading;
 
 namespace StockAnalysisWithSharesiesApp.Data
 {
     public interface ILoginService
     {
-        string Login();
+        LoginResponse Login();
     }
 
     public class LoginService : ILoginService
@@ -16,12 +18,13 @@ namespace StockAnalysisWithSharesiesApp.Data
             _options = options.Value;
         }
 
-        public string Login()
+        public LoginResponse Login()
         {
             var restClient = new RestSharp.RestClient("https://app.sharesies.nz/");
             RestSharp.RestRequest request = new RestSharp.RestRequest("api/identity/login", RestSharp.Method.POST);
             request.AddJsonBody(_options);
-            return restClient.Execute<LoginResponse>(request).Data.distill_token;
+            var response = restClient.Execute<LoginResponse>(request);
+            return response.Data;
         }
     }
 
@@ -37,5 +40,12 @@ namespace StockAnalysisWithSharesiesApp.Data
     public class LoginResponse
     {
         public string distill_token { get; set; }
+
+        public List<PortfolioStock> portfolio { get; set; }
+    }
+
+    public class PortfolioStock
+    {
+        public string fund_id { get; set; }
     }
 }

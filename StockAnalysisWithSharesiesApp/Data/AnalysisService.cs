@@ -18,23 +18,20 @@ namespace StockAnalysisWithSharesiesApp.Data
     public class AnalysisService : IAnalysisService
     {
         private const int NumberOfResults = 5;
-        private readonly AnalysisOptions _analysisOptions;
         private readonly IStockService _stockService;
         private readonly ILoginService _loginService;
-        private string _token;
-        private IEnumerable<Stock> _allStocks;
+        private LoginResponse _loginResponse;
+        private IEnumerable<Stock> _allStocks = new List<Stock>();
 
-        public AnalysisService(IOptions<AnalysisOptions> options, IStockService stockService, ILoginService loginService)
+        public AnalysisService(IStockService stockService, ILoginService loginService)
         {
-            _analysisOptions = options.Value;
             _stockService = stockService;
             _loginService = loginService;
         }
 
         public IEnumerable<Stock> GetFastestGrowingStocks()
         {
-            _token = _token ?? _loginService.Login();
-            _allStocks = _allStocks ?? _analysisOptions.Symbols.Select(s => _stockService.GetStock(s, _token));
+            GetAllStockData();
 
             return _allStocks
                 .OrderByDescending(s => s.GrowthLastyear())
@@ -43,8 +40,7 @@ namespace StockAnalysisWithSharesiesApp.Data
 
         public IEnumerable<Stock> GetStocksWithMostPositiveIndicators()
         {
-            _token = _token ?? _loginService.Login();
-            _allStocks = _allStocks ?? _analysisOptions.Symbols.Select(s => _stockService.GetStock(s, _token));
+            GetAllStockData();
 
             return _allStocks
                 .OrderByDescending(s => s.PositiveIndicators())
@@ -54,8 +50,7 @@ namespace StockAnalysisWithSharesiesApp.Data
 
         public IEnumerable<Stock> GetStocksOnBargainThisWeek()
         {
-            _token = _token ?? _loginService.Login();
-            _allStocks = _allStocks ?? _analysisOptions.Symbols.Select(s => _stockService.GetStock(s, _token));
+            GetAllStockData();
 
             return _allStocks
                 .OrderBy(s => s.GrowthLastWeek())
@@ -64,12 +59,21 @@ namespace StockAnalysisWithSharesiesApp.Data
 
         public string GetAllSymbolsAnalysed()
         {
-            return string.Join(", ", _analysisOptions.Symbols);
+            return string.Join(", ", _allStocks.Select(s => s.symbol));
         }
-    }
 
-    public class AnalysisOptions
-    {
-        public List<string> Symbols { get; set; }
+        private void GetAllStockData()
+        {
+            if (_allStocks.Any())
+            {
+                return;
+            }
+
+            _loginResponse = _loginService.Login();
+            if (_loginResponse != null)
+            {
+                _allStocks = _stockService.GetStocks(_loginResponse.portfolio.Select(p => p.fund_id), _loginResponse.distill_token);
+            }
+        }
     }
 }
