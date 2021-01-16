@@ -1,2 +1,2 @@
-# basic-stock-analysis-using-sharesies
-Basic stock analysis with Sharesies
+# Basic stock analysis with [Sharesies](https://www.sharesies.nz)
+Basic stock analysis with [Sharesies](https://www.sharesies.nz)
