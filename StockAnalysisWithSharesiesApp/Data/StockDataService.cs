@@ -6,20 +6,11 @@ namespace StockAnalysisWithSharesiesApp.Data
 {
     public interface IStockService
     {
-        Stock GetStock(string symbol, string token);
         IEnumerable<Stock> GetStocks(IEnumerable<string> stockIds, string token);
     }
 
     public class StockService : IStockService
     {
-        public Stock GetStock(string symbol, string token)
-        {
-            var restClient = new RestSharp.RestClient("https://data.sharesies.nz/");
-            RestSharp.RestRequest request = new RestSharp.RestRequest($"api/v1/instruments/urlslug/{symbol}", RestSharp.Method.GET);
-            request.AddHeader("authorization", $"Bearer {token}");
-            return JsonConvert.DeserializeObject<Stock>(restClient.Execute(request).Content);
-        }
-
         public IEnumerable<Stock> GetStocks(IEnumerable<string> stockIds, string token)
         {
             var restClient = new RestSharp.RestClient("https://data.sharesies.nz/");
@@ -38,6 +29,8 @@ namespace StockAnalysisWithSharesiesApp.Data
 
     public class Stock
     {
+        public string id { get; set; }
+
         public string name { get; set; }
 
         public string symbol { get; set; }
@@ -48,7 +41,7 @@ namespace StockAnalysisWithSharesiesApp.Data
 
         public decimal marketPrice { get; set; }
 
-        public decimal GrowthLastyear()
+        public decimal GrowthLastYear()
         {
             return Math.Round((comparisonPrices.OneYear?.percent ?? 0) * 100, 3);
         }

@@ -47,5 +47,7 @@ namespace StockAnalysisWithSharesiesApp.Data
     public class PortfolioStock
     {
         public string fund_id { get; set; }
+
+        public decimal return_percent { get; set; }
     }
 }
