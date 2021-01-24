@@ -20,7 +20,7 @@ namespace StockAnalysisWithSharesiesApp.Data
 
     public class AnalysisService : IAnalysisService
     {
-        private const int NumberOfResults = 2;
+        private const int NumberOfResults = 5;
         private readonly IStockService _stockService;
         private readonly ILoginService _loginService;
         private readonly IMapper _mapper;
