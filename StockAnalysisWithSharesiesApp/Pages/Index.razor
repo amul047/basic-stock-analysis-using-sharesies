@@ -55,12 +55,8 @@ else
         <tr>
             <th>Name</th>
             <th>Symbol</th>
-            <th>Positive indicators</th>
             <th>Growth last year</th>
-            <th>Growth last week</th>
             <th>Growth so far</th>
-            <th>PE ratio</th>
-            <th>Market Price</th>
         </tr>
         </thead>
         <tbody>
@@ -69,12 +65,8 @@ else
             <tr>
                 <td>@stock.name</td>
                 <td>@stock.symbol</td>
-                <td>@stock.PositiveIndicators()</td>
                 <td>@stock.GrowthLastYear()</td>
-                <td>@stock.GrowthLastWeek()</td>
                 <td>@stock.PercentReturn</td>
-                <td>@stock.peRatio</td>
-                <td>@stock.marketPrice</td>
             </tr>
         }
         </tbody>
