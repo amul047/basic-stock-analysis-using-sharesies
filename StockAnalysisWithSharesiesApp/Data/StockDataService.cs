@@ -90,7 +90,7 @@ namespace StockAnalysisWithSharesiesApp.Data
                 positiveIndicators++;
             }
 
-            if (peRatio < 0)
+            if (peRatio <= 0)
             {
                 positiveIndicators++;
             }
