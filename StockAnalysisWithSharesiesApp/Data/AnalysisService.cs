@@ -57,7 +57,7 @@ namespace StockAnalysisWithSharesiesApp.Data
         {
             GetAllStockData();
 
-            return _allStocks
+            return _allStocks.Where(s => s.PercentReturn > 0)
                 .OrderBy(s => s.GrowthLastWeek())
                 .Take(NumberOfResults);
         }
