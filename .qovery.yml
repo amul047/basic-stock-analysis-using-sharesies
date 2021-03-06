@@ -1,12 +1,8 @@
 ---
 application:
   name: "basic-stock-analysis-using-sharesies"
-  project: "basic-stock-analysis"
+  project: "test"
   organization: "QoveryCommunity"
-databases:
-- type: "POSTGRESQL"
-  name: "test-postgresql"
-  version: "11"
 routers:
 - name: "main-basic-stock-analysis-using-sharesies"
   routes:
