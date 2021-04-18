@@ -19,60 +19,26 @@ else
 {
     <table class="table">
         <thead>
-        <tr>
-            <th>Name</th>
-            <th>Symbol</th>
-            <th>Positive indicators</th>
-            <th>Growth so far</th>
-        </tr>
+            <tr>
+                <th>Name</th>
+                <th>Symbol</th>
+                <th>Positive indicators</th>
+                <th>Growth so far</th>
+            </tr>
         </thead>
         <tbody>
-        @foreach (var stock in _positiveStocks)
-        {
-            <tr>
-                <td>@stock.name</td>
-                <td>@stock.symbol</td>
-                <td>@stock.PositiveIndicators()</td>
-                <td>@stock.PercentReturn</td>
-            </tr>
-        }
+            @foreach (var stock in _positiveStocks)
+            {
+                <tr>
+                    <td>@stock.name</td>
+                    <td>@stock.symbol</td>
+                    <td>@stock.PositiveIndicators()</td>
+                    <td>@stock.PercentReturn</td>
+                </tr>
+            }
         </tbody>
     </table>
 }
-
-<h2>Fastest growing stocks last year</h2>
-
-@if (_growthStocks == null)
-{
-    <p>
-        <em>Loading...</em>
-    </p>
-}
-else
-{
-    <table class="table">
-        <thead>
-        <tr>
-            <th>Name</th>
-            <th>Symbol</th>
-            <th>Growth last year</th>
-            <th>Growth so far</th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach (var stock in _growthStocks)
-        {
-            <tr>
-                <td>@stock.name</td>
-                <td>@stock.symbol</td>
-                <td>@stock.GrowthLastYear()</td>
-                <td>@stock.PercentReturn</td>
-            </tr>
-        }
-        </tbody>
-    </table>
-}
-
 
 <h2>Bargains this week</h2>
 
@@ -86,58 +52,23 @@ else
 {
     <table class="table">
         <thead>
-        <tr>
-            <th>Name</th>
-            <th>Symbol</th>
-            <th>Growth last week</th>
-            <th>Growth so far</th>
-        </tr>
+            <tr>
+                <th>Name</th>
+                <th>Symbol</th>
+                <th>Growth last week</th>
+                <th>Growth so far</th>
+            </tr>
         </thead>
         <tbody>
-        @foreach (var stock in _bargainStocks)
-        {
-            <tr>
-                <td>@stock.name</td>
-                <td>@stock.symbol</td>
-                <td>@stock.GrowthLastWeek()</td>
-                <td>@stock.PercentReturn</td>
-            </tr>
-        }
-        </tbody>
-    </table>
-}
-
-<h2>Stocks to sell</h2>
-
-@if (_stocksToSell == null)
-{
-    <p>
-        <em>Loading...</em>
-    </p>
-}
-else
-{
-    <table class="table">
-        <thead>
-        <tr>
-            <th>Name</th>
-            <th>Symbol</th>
-            <th>Positive indicators</th>
-            <th>Growth last year</th>
-            <th>Growth so far</th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach (var stock in _stocksToSell)
-        {
-            <tr>
-                <td>@stock.name</td>
-                <td>@stock.symbol</td>
-                <td>@stock.PositiveIndicators()</td>
-                <td>@stock.GrowthLastYear()</td>
-                <td>@stock.PercentReturn</td>
-            </tr>
-        }
+            @foreach (var stock in _bargainStocks)
+            {
+                <tr>
+                    <td>@stock.name</td>
+                    <td>@stock.symbol</td>
+                    <td>@stock.GrowthLastWeek()</td>
+                    <td>@stock.PercentReturn</td>
+                </tr>
+            }
         </tbody>
     </table>
 }
@@ -145,15 +76,11 @@ else
 @code {
     private IEnumerable<AnalyzedStock> _positiveStocks;
     private IEnumerable<AnalyzedStock> _bargainStocks;
-    private IEnumerable<AnalyzedStock> _growthStocks;
-    private IEnumerable<AnalyzedStock> _stocksToSell;
 
     protected override void OnInitialized()
     {
         _positiveStocks = AnalysisService.GetStocksWithMostPositiveIndicators();
         _bargainStocks = AnalysisService.GetStocksOnBargainThisWeek();
-        _growthStocks = AnalysisService.GetFastestGrowingStocks();
-        _stocksToSell = AnalysisService.GetStocksThatShouldBeSold();
     }
 
 }

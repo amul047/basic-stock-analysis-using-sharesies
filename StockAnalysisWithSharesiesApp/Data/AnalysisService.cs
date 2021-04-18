@@ -58,7 +58,7 @@ namespace StockAnalysisWithSharesiesApp.Data
             GetAllStockData();
 
             return _allStocks.Where(s => s.PercentReturn > 0)
-                .OrderBy(s => s.GrowthLastWeek())
+                .OrderByDescending(s => s.PercentReturn - s.GrowthLastWeek())
                 .Take(NumberOfResults);
         }
 
@@ -67,7 +67,7 @@ namespace StockAnalysisWithSharesiesApp.Data
             GetAllStockData();
 
             return _allStocks
-                .Where(s => s.PercentReturn > 0)
+                .Where(s => s.PercentReturn > 0 && s.PositiveIndicators() < 5)
                 .OrderBy(s => s.PercentReturn)
                 .Take(NumberOfResults);
         }

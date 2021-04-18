@@ -1,0 +1,54 @@
+﻿@page "/sell"
+
+@using StockAnalysisWithSharesiesApp.Data
+@inject IAnalysisService AnalysisService
+
+<h1>Basic Stock Analysis</h1>
+<p>Stocks analysed:</p>
+<p>@AnalysisService.GetAllSymbolsAnalyzed()</p>
+
+<h2>Stocks to sell</h2>
+
+@if (_stocksToSell == null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Symbol</th>
+            <th>Positive indicators</th>
+            <th>Growth last year</th>
+            <th>Growth so far</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var stock in _stocksToSell)
+        {
+            <tr>
+                <td>@stock.name</td>
+                <td>@stock.symbol</td>
+                <td>@stock.PositiveIndicators()</td>
+                <td>@stock.GrowthLastYear()</td>
+                <td>@stock.PercentReturn</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+
+    private IEnumerable<AnalyzedStock> _stocksToSell;
+
+    protected override void OnInitialized()
+    {
+        _stocksToSell = AnalysisService.GetStocksThatShouldBeSold();
+    }
+
+}
