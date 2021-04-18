@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
+using Microsoft.Extensions.Options;
 
 namespace StockAnalysisWithSharesiesApp.Data
 {
@@ -16,6 +17,8 @@ namespace StockAnalysisWithSharesiesApp.Data
         IEnumerable<AnalyzedStock> GetStocksThatShouldBeSold();
 
         string GetAllSymbolsAnalyzed();
+
+        int GetMaximumForPositiveIndicators();
     }
 
     public class AnalysisService : IAnalysisService
@@ -26,12 +29,14 @@ namespace StockAnalysisWithSharesiesApp.Data
         private readonly IMapper _mapper;
         private LoginResponse _loginResponse;
         private IEnumerable<AnalyzedStock> _allStocks = new List<AnalyzedStock>();
+        private AnalysisOptions _analysisOptions;
 
-        public AnalysisService(IStockService stockService, ILoginService loginService, IMapper mapper)
+        public AnalysisService(IStockService stockService, ILoginService loginService, IMapper mapper, IOptions<AnalysisOptions> options)
         {
             _stockService = stockService;
             _loginService = loginService;
             _mapper = mapper;
+            _analysisOptions = options.Value;
         }
 
         public IEnumerable<AnalyzedStock> GetFastestGrowingStocks()
@@ -67,7 +72,7 @@ namespace StockAnalysisWithSharesiesApp.Data
             GetAllStockData();
 
             return _allStocks
-                .Where(s => s.PercentReturn > 0 && s.PositiveIndicators() < 5)
+                .Where(s => s.PercentReturn > 0 && s.PositiveIndicators() < _analysisOptions.PositiveIndicatorsThreshold)
                 .OrderBy(s => s.PercentReturn)
                 .Take(NumberOfResults);
         }
@@ -75,6 +80,11 @@ namespace StockAnalysisWithSharesiesApp.Data
         public string GetAllSymbolsAnalyzed()
         {
             return string.Join(", ", _allStocks.Select(s => s.symbol));
+        }
+
+        public int GetMaximumForPositiveIndicators()
+        {
+            return _analysisOptions.PositiveIndicatorsMaximum;
         }
 
         private void GetAllStockData()
@@ -91,6 +101,13 @@ namespace StockAnalysisWithSharesiesApp.Data
                     (s, ps) => _mapper.Map<AnalyzedStock>(s).AddPercentReturn(ps.return_percent));
             }
         }
+    }
+
+    public class AnalysisOptions
+    {
+        public int PositiveIndicatorsThreshold { get; set; }
+
+        public int PositiveIndicatorsMaximum { get; set; }
     }
 
     public class AnalyzedStock : Stock

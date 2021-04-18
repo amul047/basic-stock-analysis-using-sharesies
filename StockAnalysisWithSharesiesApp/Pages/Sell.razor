@@ -33,7 +33,7 @@ else
             <tr>
                 <td>@stock.name</td>
                 <td>@stock.symbol</td>
-                <td>@stock.PositiveIndicators()</td>
+                <td>@stock.PositiveIndicators() / @AnalysisService.GetMaximumForPositiveIndicators()</td>
                 <td>@stock.GrowthLastYear()</td>
                 <td>@stock.PercentReturn</td>
             </tr>
