@@ -99,7 +99,7 @@ namespace StockAnalysisWithSharesiesApp.Data
 
         public AnalyzedStock AddPercentReturn(decimal percentReturn)
         {
-            PercentReturn = Math.Round(percentReturn, 3);
+            PercentReturn = Math.Round(percentReturn, 2);
             return this;
         }
 
